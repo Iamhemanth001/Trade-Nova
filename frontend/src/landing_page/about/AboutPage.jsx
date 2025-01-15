@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import Hero from "./Hero";
-import CreateTicket from "./CreateTicket";
-import Footer from "../../Footer";
+import Team from "./Team";
 import Navbar from "../../Navbar";
+import Footer from "../../Footer";
 
-function SupportPage(){
+function AboutPage(){
     return (
-        <>  
+        <>
             <Navbar/>
             <Hero/>
-            <CreateTicket/>
+            <Team/>
             <Footer/>
         </>
     )
 }
 
-export default SupportPage;
+export default AboutPage;

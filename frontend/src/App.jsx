@@ -1,3 +1,4 @@
+import Homepage from "./landing_page/home/HomePage"
 
 
 function App() {
@@ -5,7 +6,7 @@ function App() {
   return (
     <>
       <div>
-        <h1>Hello</h1>
+        <Homepage/>
       </div>
     </>
   )
