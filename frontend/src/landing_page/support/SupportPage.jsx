@@ -8,10 +8,8 @@ import Navbar from "../../Navbar";
 function SupportPage(){
     return (
         <>  
-            <Navbar/>
             <Hero/>
             <CreateTicket/>
-            <Footer/>
         </>
     )
 }
