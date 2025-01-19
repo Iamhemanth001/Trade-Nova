@@ -68,7 +68,7 @@ const Orders = () => {
                       className="delete-btn"
                       onClick={() => deleteOrder(order._id)}
                     >
-                     <i className="fa-solid fa-trash fa-2xl" style={{color: "#ff0000"}}></i>
+                     <i className="fa-solid fa-trash fa-xl" style={{color: "#ff0000"}}></i>
                     </button>
                   </td>
                 </tr>

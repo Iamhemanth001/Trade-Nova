@@ -5,14 +5,16 @@ const mongoose = require("mongoose");
 const { HoldingsModel } = require("./models/HoldingsModel");
 const { PositionsModel } = require("./models/PositionsModel");
 const { OrdersModel } = require("./models/OrdersModel");
-
+const User = require("./schema/UserSchema");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const { OAuth2Client } = require('google-auth-library');
 const app = express();
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
 
 const port = process.env.PORT || 3000;
 const uri = process.env.MONGO_URL;
@@ -74,3 +76,71 @@ async function main(params) {
     mongoose.connect(uri);
 }
 
+
+app.post('/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please provide email, and password' });
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already registered' });
+    }
+
+    const newUser = new User({
+      name,
+      email,
+      password,
+    });
+
+    await newUser.save();
+
+    console.log(newUser);
+    res.status(201).json({ message: 'User created successfully', user: newUser });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+app.post('/google-login', async (req, res) => {
+  const { idToken } = req.body;
+
+  // console.log("Received Google ID Token:", idToken);  
+  console.log("Received Google ID Token:");  
+
+  if (!idToken) {
+    return res.status(400).json({ message: 'Google ID token is required' });
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        email,
+        password: null,  
+      });
+      await user.save();
+    }
+
+    res.status(200).json({ message: 'Login successful', user });
+
+  } catch (error) {
+    console.error('Google login error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
