@@ -424,7 +424,7 @@ hr {
   padding: 10px 10px;
   text-align: right;
   font-weight: 400;
-  font-size: 0.9rem;
+  font-size: 0.9rem !important;
   color: rgb(73, 73, 73);
 }
 

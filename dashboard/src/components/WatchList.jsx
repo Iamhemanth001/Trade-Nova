@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
-import { useState } from 'react';
+import React ,  { useState, useContext } from "react";
 import {Tooltip, Grow} from '@mui/material';
 import { watchlist } from "../data/data";
-
 import {BarChartOutlined, KeyboardArrowDown,KeyboardArrowUp, MoreHoriz} from "@mui/icons-material"
+import GeneralContext from "./GeneralContext";
+
 const WatchList = () => {
   return (
     <div className="watchlist-container">
@@ -63,11 +63,22 @@ const WatchListItem = ({ stock })=>{
 }
 
 const WatchListActions = ({uid}) =>{
+  
+  const generalContext = useContext(GeneralContext);
+
+  const handleBuyClick = () => {
+    if (generalContext?.openBuyWindow) {
+      generalContext.openBuyWindow(uid);
+    } else {
+      console.error("GeneralContext is not provided!");
+    }
+  };
+
   return(
     <span className="actions">
       <span>
         <Tooltip title="Buy (B)" placement="top" arrow TransitionComponent={Grow}>
-          <button className="buy">Buy</button>
+          <button className="buy" onClick={handleBuyClick}>Buy</button>
         </Tooltip>
 
         <Tooltip title="Sell (S)" placement="top" arrow TransitionComponent={Grow}>
